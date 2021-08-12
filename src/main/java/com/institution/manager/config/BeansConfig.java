@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
@@ -29,6 +31,11 @@ public class BeansConfig {
     @Bean
     public ProjectionFactory projectionFactory(){
         return new SpelAwareProxyProjectionFactory();
+    }
+
+    @Bean
+    public JavaMailSender mailSender(){
+        return new JavaMailSenderImpl();
     }
 
 }

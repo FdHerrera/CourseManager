@@ -4,8 +4,10 @@ import com.institution.manager.dto.request.NewUserDto;
 import com.institution.manager.dto.response.UserResponseDto;
 import com.institution.manager.entity.User;
 import com.institution.manager.exception.CanNotCreateUserException;
+import com.institution.manager.exception.CanNotSendEmailException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.service.interf.IAuthService;
+import com.institution.manager.service.interf.IEmailService;
 import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,13 @@ import java.util.Locale;
 public class AuthServiceImpl implements IAuthService {
 
     private final IUserService userService;
+    private final IEmailService emailService;
     @Autowired
     private final MessageSource messageSource;
     @Autowired
     private final ProjectionFactory projectionFactory;
 
-    public UserResponseDto registerUser(NewUserDto newUserDto, boolean isProfessor) throws CanNotCreateUserException, UserNotFoundException {
+    public UserResponseDto registerUser(NewUserDto newUserDto, boolean isProfessor) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException {
         try {
             userService.createUser(newUserDto);
         }catch (CanNotCreateUserException e){
@@ -34,8 +37,10 @@ public class AuthServiceImpl implements IAuthService {
         String email = newUserDto.getEmail();
         if(isProfessor)
             userService.setProfessorRole(email);
-        else
+        else {
             userService.setStudentRole(email);
+            emailService.sendEmail(email);
+        }
 
         User newUser = userService.findUser(email);
 
