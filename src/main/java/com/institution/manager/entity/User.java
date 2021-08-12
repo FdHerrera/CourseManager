@@ -41,14 +41,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    @ElementCollection
-    private Set<ERole> roles;
     private Boolean enabled = Boolean.FALSE;
     private Boolean deleted = Boolean.FALSE;
     @ElementCollection(targetClass=GrantedAuthority.class)
     private Collection<? extends GrantedAuthority> authorities;
 
-    public User(String firstName, String lastName, String email, String dni, String password, String phoneNumber, Date createdAt, Set<ERole> roles) {
+    public User(String firstName, String lastName, String email, String dni, String password, String phoneNumber, Date createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -56,7 +54,6 @@ public class User implements UserDetails {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.createdAt = createdAt;
-        this.roles = roles;
     }
 
     @Override

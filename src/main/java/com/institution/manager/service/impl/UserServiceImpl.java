@@ -32,7 +32,6 @@ public class UserServiceImpl implements IUserService {
     private final MessageSource messageSource;
 
     public UserResponseDto createUser(NewUserDto newUserDto) throws CanNotCreateUserException {
-        HashSet<ERole> roles = new HashSet<>();
         String encodedPass = encoder.encode(newUserDto.getPassword());
         User newUser = new User(newUserDto.getFirstName(),
                 newUserDto.getLastName(),
@@ -40,20 +39,29 @@ public class UserServiceImpl implements IUserService {
                 newUserDto.getDni(),
                 encodedPass,
                 newUserDto.getPhoneNumber(),
-                Date.from(Instant.now()),
-                roles);
+                Date.from(Instant.now()));
         return projectionFactory.createProjection(UserResponseDto.class, repo.save(newUser));
     }
 
     @Override
     public void setProfessorRole(String email) throws UserNotFoundException {
-        User foundUser = repo.findByEmail(email).orElseThrow(
+        User foundUser = findUser(email);
+        SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(ERole.ROLE_PROFESSOR.name());
+        foundUser.setAuthorities(Collections.singletonList(professorAuthority));
+    }
+
+    @Override
+    public void setStudentRole(String email) throws UserNotFoundException {
+        User foundUser = findUser(email);
+        SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority(ERole.ROLE_STUDENT.name());
+        foundUser.setAuthorities(Collections.singletonList(studentAuthority));
+    }
+
+    @Override
+    public User findUser(String email) throws UserNotFoundException {
+        return repo.findByEmail(email).orElseThrow(
                 ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
         );
-        foundUser.getRoles().add(ERole.ROLE_PROFESSOR);
-        Set<ERole> roles = foundUser.getRoles();
-        SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(roles.stream().filter(eRole -> eRole.equals(ERole.ROLE_PROFESSOR)).findFirst().get().name());
-        foundUser.setAuthorities(Collections.singleton(professorAuthority));
     }
 
 }
