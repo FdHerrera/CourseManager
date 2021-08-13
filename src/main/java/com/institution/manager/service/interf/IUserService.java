@@ -13,5 +13,5 @@ public interface IUserService {
 
     void setStudentRole(String email) throws UserNotFoundException;
 
-    User findUser(String email) throws UserNotFoundException;
+    User findStudentByEmail(String email) throws UserNotFoundException;
 }

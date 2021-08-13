@@ -6,7 +6,7 @@ import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
 import com.institution.manager.exception.CanNotCreateUserException;
 import com.institution.manager.exception.UserNotFoundException;
-import com.institution.manager.repo.UsersRepo;
+import com.institution.manager.repo.StudentRepo;
 import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    private final UsersRepo repo;
+    private final StudentRepo studentRepo;
     @Autowired
     private final ProjectionFactory projectionFactory;
     @Autowired
@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService {
                 encodedPass,
                 newUserDto.getPhoneNumber(),
                 Date.from(Instant.now()));
-        return projectionFactory.createProjection(UserResponseDto.class, repo.save(newUser));
+        return projectionFactory.createProjection(UserResponseDto.class, newUser);
     }
 
     @Override
@@ -52,16 +52,15 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void setStudentRole(String email) throws UserNotFoundException {
-        User foundUser = findUser(email);
+        User foundUser = findStudentByEmail(email);
         SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority(ERole.ROLE_STUDENT.name());
         foundUser.setAuthorities(Collections.singletonList(studentAuthority));
     }
 
     @Override
-    public User findUser(String email) throws UserNotFoundException {
-        return repo.findByEmail(email).orElseThrow(
+    public User findStudentByEmail(String email) throws UserNotFoundException {
+        return studentRepo.findByEmail(email).orElseThrow(
                 ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
         );
     }
-
 }

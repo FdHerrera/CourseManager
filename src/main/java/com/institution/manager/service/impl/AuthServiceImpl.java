@@ -45,7 +45,6 @@ public class AuthServiceImpl implements IAuthService {
             emailService.sendEmail(email);
         }
 
-        User newUser = userService.findUser(email);
 
         return projectionFactory.createProjection(UserResponseDto.class, newUser);
     }

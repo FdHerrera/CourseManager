@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Date;
 
-@Entity(name = "app_user")
 @Data
 public class User implements UserDetails {
 
