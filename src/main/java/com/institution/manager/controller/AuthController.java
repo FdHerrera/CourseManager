@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping(path = "/auth")
 @AllArgsConstructor
@@ -21,8 +19,8 @@ public class AuthController {
     private final IAuthService service;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<UserResponseDto> registerUser(@RequestBody @Valid NewUserDto newUserDto, @RequestParam boolean isProfessor) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException {
-        UserResponseDto newUser = service.registerUser(newUserDto, isProfessor);
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody NewUserDto newUserDto) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException {
+        UserResponseDto newUser = service.registerUser(newUserDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 

@@ -28,7 +28,8 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private final ProjectionFactory projectionFactory;
 
-    public UserResponseDto registerUser(NewUserDto newUserDto, boolean isProfessor) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException {
+    public UserResponseDto registerUser(NewUserDto newUserDto) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException {
+        boolean isProfessor = newUserDto.getIsProfessor();
         try {
             userService.createUser(newUserDto);
         }catch (CanNotCreateUserException e){

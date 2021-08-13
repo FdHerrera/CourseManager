@@ -2,8 +2,6 @@ package com.institution.manager.dto.request;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class NewUserDto {
 
@@ -13,5 +11,6 @@ public class NewUserDto {
     private String dni;
     private String password;
     private String phoneNumber;
+    private Boolean isProfessor;
 
 }

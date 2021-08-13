@@ -7,5 +7,5 @@ import com.institution.manager.exception.CanNotSendEmailException;
 import com.institution.manager.exception.UserNotFoundException;
 
 public interface IAuthService {
-    UserResponseDto registerUser(NewUserDto newUser, boolean isProfesor) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException;
+    UserResponseDto registerUser(NewUserDto newUser) throws CanNotCreateUserException, UserNotFoundException, CanNotSendEmailException;
 }
