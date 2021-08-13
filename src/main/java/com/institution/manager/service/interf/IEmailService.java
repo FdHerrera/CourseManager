@@ -5,4 +5,5 @@ import com.institution.manager.exception.UserNotFoundException;
 
 public interface IEmailService {
     void sendEmail(String email) throws UserNotFoundException, CanNotSendEmailException;
+    void sendEmail(String email, boolean isProfessor) throws UserNotFoundException, CanNotSendEmailException;
 }

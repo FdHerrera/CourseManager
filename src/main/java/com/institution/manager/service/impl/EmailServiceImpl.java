@@ -50,6 +50,25 @@ public class EmailServiceImpl implements IEmailService {
                 throw new CanNotSendEmailException(messageSource.getMessage("error.cant.send.email", null, Locale.getDefault()));
             }
         }
+
+    @Override
+    public void sendEmail(String email, boolean isProfessor) throws UserNotFoundException, CanNotSendEmailException {
+        String token = tokenService.createToken(email);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            String confirmationLink = EmailConstants.CONFIRMLINK + token;
+            helper.setText(buildEmail(confirmationLink), true);
+            helper.setTo(EmailConstants.ADMIN_EMAIL);
+            helper.setSubject(EmailConstants.CONFIRM_PROFESSOR + email);
+            helper.setFrom(EmailConstants.FROM);
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            LOGGER.error(messageSource.getMessage("error.cant.send.email", null, Locale.getDefault()), e);
+            throw new CanNotSendEmailException(messageSource.getMessage("error.cant.send.email", null, Locale.getDefault()));
+        }
+    }
+
     private String buildEmail(String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

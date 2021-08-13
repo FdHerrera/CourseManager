@@ -35,8 +35,10 @@ public class AuthServiceImpl implements IAuthService {
             throw new CanNotCreateUserException(messageSource.getMessage("error.cant.create.user", null, Locale.getDefault()));
         }
         String email = newUserDto.getEmail();
-        if(isProfessor)
+        if(isProfessor) {
             userService.setProfessorRole(email);
+            emailService.sendEmail(email, true);
+        }
         else {
             userService.setStudentRole(email);
             emailService.sendEmail(email);
