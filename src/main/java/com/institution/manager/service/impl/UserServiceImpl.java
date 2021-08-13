@@ -6,6 +6,7 @@ import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
 import com.institution.manager.exception.CanNotCreateUserException;
 import com.institution.manager.exception.UserNotFoundException;
+import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
 import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.*;
 public class UserServiceImpl implements IUserService {
 
     private final StudentRepo studentRepo;
+    private final ProfessorRepo professorRepo;
     @Autowired
     private final ProjectionFactory projectionFactory;
     @Autowired
@@ -45,7 +47,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void setProfessorRole(String email) throws UserNotFoundException {
-        User foundUser = findUser(email);
+        User foundUser = findProfessorByEmail(email);
         SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(ERole.ROLE_PROFESSOR.name());
         foundUser.setAuthorities(Collections.singletonList(professorAuthority));
     }
@@ -60,6 +62,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User findStudentByEmail(String email) throws UserNotFoundException {
         return studentRepo.findByEmail(email).orElseThrow(
+                ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
+        );
+    }
+
+    public User findProfessorByEmail(String email) throws UserNotFoundException {
+        return professorRepo.findByEmail(email).orElseThrow(
                 ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
         );
     }
