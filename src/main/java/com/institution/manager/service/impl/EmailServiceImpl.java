@@ -1,5 +1,6 @@
 package com.institution.manager.service.impl;
 
+import com.institution.manager.exception.CanNotCreateTokenException;
 import com.institution.manager.exception.CanNotSendEmailException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.service.interf.IEmailService;
@@ -34,7 +35,7 @@ public class EmailServiceImpl implements IEmailService {
 
     @Override
     @Async
-    public void sendEmail(String email) throws UserNotFoundException, CanNotSendEmailException {
+    public void sendEmail(String email) throws UserNotFoundException, CanNotSendEmailException, CanNotCreateTokenException {
         String token = tokenService.createToken(email);
             try {
                 MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -52,7 +53,7 @@ public class EmailServiceImpl implements IEmailService {
         }
 
     @Override
-    public void sendEmail(String email, boolean isProfessor) throws UserNotFoundException, CanNotSendEmailException {
+    public void sendEmail(String email, boolean isProfessor) throws UserNotFoundException, CanNotSendEmailException, CanNotCreateTokenException {
         String token = tokenService.createToken(email);
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();

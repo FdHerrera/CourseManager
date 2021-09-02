@@ -1,10 +1,10 @@
 package com.institution.manager.service.impl;
 
 import com.institution.manager.dto.request.NewUserDto;
-import com.institution.manager.dto.response.UserResponseDto;
+import com.institution.manager.entity.Professor;
+import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
-import com.institution.manager.exception.CanNotCreateUserException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
@@ -12,12 +12,10 @@ import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.*;
 
 @AllArgsConstructor
@@ -27,48 +25,48 @@ public class UserServiceImpl implements IUserService {
     private final StudentRepo studentRepo;
     private final ProfessorRepo professorRepo;
     @Autowired
-    private final ProjectionFactory projectionFactory;
-    @Autowired
     private final BCryptPasswordEncoder encoder;
     @Autowired
     private final MessageSource messageSource;
 
-    public UserResponseDto createUser(NewUserDto newUserDto) throws CanNotCreateUserException {
+    @Override
+    public Professor createProfessor(NewUserDto newUserDto){
         String encodedPass = encoder.encode(newUserDto.getPassword());
-        User newUser = new User(newUserDto.getFirstName(),
-                newUserDto.getLastName(),
-                newUserDto.getEmail(),
-                newUserDto.getDni(),
-                encodedPass,
-                newUserDto.getPhoneNumber(),
-                Date.from(Instant.now()));
-        return projectionFactory.createProjection(UserResponseDto.class, newUser);
+        Professor newProfessor = Professor.builder()
+                .firstName(newUserDto.getFirstName())
+                .lastName(newUserDto.getLastName())
+                .email(newUserDto.getEmail())
+                .password(encodedPass)
+                .phoneNumber(newUserDto.getPhoneNumber())
+                .dni(newUserDto.getDni())
+                .build();
+        return professorRepo.save(newProfessor);
     }
 
     @Override
-    public void setProfessorRole(String email) throws UserNotFoundException {
-        User foundUser = findProfessorByEmail(email);
-        SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(ERole.ROLE_PROFESSOR.name());
-        foundUser.setAuthorities(Collections.singletonList(professorAuthority));
+    public Student createStudent(NewUserDto newUserDto){
+        String encodedPass = encoder.encode(newUserDto.getPassword());
+        Student newStudent = Student.builder()
+                .firstName(newUserDto.getFirstName())
+                .lastName(newUserDto.getLastName())
+                .email(newUserDto.getEmail())
+                .password(encodedPass)
+                .phoneNumber(newUserDto.getPhoneNumber())
+                .dni(newUserDto.getDni())
+                .build();
+        return studentRepo.save(newStudent);
     }
 
     @Override
-    public void setStudentRole(String email) throws UserNotFoundException {
-        User foundUser = findStudentByEmail(email);
-        SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority(ERole.ROLE_STUDENT.name());
-        foundUser.setAuthorities(Collections.singletonList(studentAuthority));
+    public User findUser(String email) throws UserNotFoundException {
+        Optional<Student> studentFound = studentRepo.findByEmail(email);
+        Optional<Professor> professorFound = professorRepo.findByEmail(email);
+        if(studentFound.isPresent())
+            return studentFound.get();
+        else if(professorFound.isPresent())
+            return professorFound.get();
+        else
+            throw new UserNotFoundException(messageSource.getMessage("error.user.not.found", null, Locale.getDefault()));
     }
 
-    @Override
-    public User findStudentByEmail(String email) throws UserNotFoundException {
-        return studentRepo.findByEmail(email).orElseThrow(
-                ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
-        );
-    }
-
-    public User findProfessorByEmail(String email) throws UserNotFoundException {
-        return professorRepo.findByEmail(email).orElseThrow(
-                ()-> new UserNotFoundException(messageSource.getMessage("error.cant.found.user", null, Locale.getDefault()))
-        );
-    }
 }

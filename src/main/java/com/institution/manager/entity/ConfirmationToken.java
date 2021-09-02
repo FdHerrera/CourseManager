@@ -20,17 +20,23 @@ public class ConfirmationToken {
     private Date expiresAt;
     private Date confirmedAt;
     @ManyToOne
-    @JoinColumn(
-            nullable = false,
-            name = "app_user_id"
-    )
-    private User user;
+    @JoinColumn(name = "student_id")
+    private Student student;
+    @ManyToOne
+    @JoinColumn(name = "professor_id")
+    private Professor professor;
 
-    public ConfirmationToken(String token, Date createdAt, Date expiresAt, User user) {
+    public ConfirmationToken(String token, Date createdAt, Date expiresAt, Student student) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
-        this.user = user;
+        this.student = student;
     }
-    
+
+    public ConfirmationToken(String token, Date createdAt, Date expiresAt, Professor professor) {
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
+        this.professor = professor;
+    }
 }

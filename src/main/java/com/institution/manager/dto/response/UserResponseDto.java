@@ -10,5 +10,6 @@ public interface UserResponseDto {
     String getLastName();
     String getDni();
     String getPhoneNumber();
+    String getEmail();
 
 }
