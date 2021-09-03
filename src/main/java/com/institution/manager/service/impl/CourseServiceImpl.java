@@ -38,7 +38,7 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public Map<CourseResponseDto, String> setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
+    public String setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
         Course courseFound = repo.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException(
                         messageSource.getMessage("error.course.not.found", null, Locale.getDefault()))
@@ -47,8 +47,7 @@ public class CourseServiceImpl implements ICourseService {
         userService.checkIfIsProfessor(userFound);
         courseFound.setProfessor((Professor) userFound);
         Course courseWithProfessor = repo.save(courseFound);
-        CourseResponseDto courseProjection = projectionFactory.createProjection(CourseResponseDto.class, courseWithProfessor);
-        return Map.of(courseProjection, userFound.toString());
+        return courseWithProfessor.toString();
     }
 
 }

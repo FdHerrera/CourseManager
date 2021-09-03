@@ -2,7 +2,6 @@ package com.institution.manager.controller;
 
 import com.institution.manager.dto.request.NewCourseDto;
 import com.institution.manager.dto.response.CourseResponseDto;
-import com.institution.manager.entity.Professor;
 import com.institution.manager.exception.CourseNotFoundException;
 import com.institution.manager.exception.UserIsNotAProfessorException;
 import com.institution.manager.exception.UserNotFoundException;
@@ -28,8 +27,8 @@ public class CourseController {
     }
 
     @PutMapping(path = "/set_professor")
-    public ResponseEntity<Map<CourseResponseDto, String>> setProfessorToCourse(@RequestParam("courseId") Long courseId,@RequestParam("professorEmail")  String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
-        Map<CourseResponseDto, String> courseWithProfessor = courseService.setProfessor(courseId, professorEmail);
+    public ResponseEntity<String> setProfessorToCourse(@RequestParam("courseId") Long courseId,@RequestParam("professorEmail")  String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
+        String courseWithProfessor = courseService.setProfessor(courseId, professorEmail);
         return new ResponseEntity<>(courseWithProfessor, HttpStatus.OK);
     }
 

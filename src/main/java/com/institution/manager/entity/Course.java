@@ -28,4 +28,18 @@ public class Course {
     public Course(String courseName) {
         this.courseName = courseName;
     }
+
+    @Override
+    public String toString() {
+        String studentsList = "";
+        students.forEach(student -> studentsList.concat(student.toString()));
+        return "Course{" +
+                "id=" + id +
+                ", courseName='" + courseName + '\'' +
+                ", students={" +
+                studentsList
+                + "} , professor=" + professor.toString() +
+                '}';
+    }
+
 }
