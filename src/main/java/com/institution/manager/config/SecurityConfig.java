@@ -12,7 +12,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST , "/auth/register").permitAll().and().authorizeRequests()
+                .antMatchers(HttpMethod.POST , "/auth/register", "/courses/create_course").permitAll().and().authorizeRequests()
                 .anyRequest().authenticated().and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
