@@ -49,7 +49,8 @@ public class Professor extends User implements UserDetails, Serializable {
     private Collection<? extends GrantedAuthority> authorities;
 
     @Builder
-    public Professor(String firstName, String lastName, String email, String dni, String password, String phoneNumber) {
+    public Professor(String firstName, String lastName, String email, String dni, String password, String phoneNumber, Collection<? extends GrantedAuthority> authorities) {
+        super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -57,12 +58,11 @@ public class Professor extends User implements UserDetails, Serializable {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.createdAt = new Date();
+        this.authorities = authorities;
     }
 
     public static Professor build(Professor professor){
-        SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(ERole.ROLE_PROFESSOR.name());
-        professor.setAuthorities(Collections.singleton(professorAuthority));
-        return new Professor(professor.getFirstName(), professor.getLastName(), professor.getEmail(), professor.getDni(), professor.getPassword(), professor.getPhoneNumber());
+        return new Professor(professor.getFirstName(), professor.getLastName(), professor.getEmail(), professor.getDni(), professor.getPassword(), professor.getPhoneNumber(), professor.getAuthorities());
     }
 
     @Override

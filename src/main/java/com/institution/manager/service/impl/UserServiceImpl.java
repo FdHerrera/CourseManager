@@ -13,6 +13,7 @@ import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Professor createProfessor(NewUserDto newUserDto){
         String encodedPass = encoder.encode(newUserDto.getPassword());
+        SimpleGrantedAuthority professorAuthority = new SimpleGrantedAuthority(ERole.ROLE_PROFESSOR.name());
         Professor newProfessor = Professor.builder()
                 .firstName(newUserDto.getFirstName())
                 .lastName(newUserDto.getLastName())
@@ -39,6 +41,7 @@ public class UserServiceImpl implements IUserService {
                 .password(encodedPass)
                 .phoneNumber(newUserDto.getPhoneNumber())
                 .dni(newUserDto.getDni())
+                .authorities(Collections.singleton(professorAuthority))
                 .build();
         return professorRepo.save(newProfessor);
     }
@@ -46,6 +49,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Student createStudent(NewUserDto newUserDto){
         String encodedPass = encoder.encode(newUserDto.getPassword());
+        SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority(ERole.ROLE_STUDENT.name());
         Student newStudent = Student.builder()
                 .firstName(newUserDto.getFirstName())
                 .lastName(newUserDto.getLastName())
@@ -53,6 +57,7 @@ public class UserServiceImpl implements IUserService {
                 .password(encodedPass)
                 .phoneNumber(newUserDto.getPhoneNumber())
                 .dni(newUserDto.getDni())
+                .authorities(Collections.singleton(studentAuthority))
                 .build();
         return studentRepo.save(newStudent);
     }
@@ -72,7 +77,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException {
         boolean isProfessor = user.getAuthorities().stream().anyMatch(
-                grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(ERole.ROLE_PROFESSOR.name())
+                grantedAuthority -> grantedAuthority.getAuthority().equals(ERole.ROLE_PROFESSOR.name())
         );
         if (isProfessor)
             return true;

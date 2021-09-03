@@ -44,14 +44,8 @@ public class CourseServiceImpl implements ICourseService {
                         messageSource.getMessage("error.course.not.found", null, Locale.getDefault()))
                 );
         User userFound = userService.findUser(professorEmail);
-        try{
-            boolean isProfessor = userService.checkIfIsProfessor(userFound);
-            if(isProfessor) {
-                courseFound.setProfessor((Professor) userFound);
-            }
-        } catch (UserIsNotAProfessorException e){
-            throw new UserIsNotAProfessorException(e.getMessage());
-        }
+        userService.checkIfIsProfessor(userFound);
+        courseFound.setProfessor((Professor) userFound);
         Course courseWithProfessor = repo.save(courseFound);
         CourseResponseDto courseProjection = projectionFactory.createProjection(CourseResponseDto.class, courseWithProfessor);
         return Map.of(courseProjection, userFound.toString());

@@ -51,7 +51,8 @@ public class Student extends User implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     @Builder
-    public Student(String firstName, String lastName, String email, String dni, String password, String phoneNumber) {
+    public Student(String firstName, String lastName, String email, String dni, String password, String phoneNumber, Collection<? extends GrantedAuthority> authorities) {
+        super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -59,12 +60,11 @@ public class Student extends User implements UserDetails {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.createdAt = new Date();
+        this.authorities = authorities;
     }
 
     public static Student build(Student student){
-        SimpleGrantedAuthority studentAuthority = new SimpleGrantedAuthority(ERole.ROLE_STUDENT.name());
-        student.setAuthorities(Collections.singleton(studentAuthority));
-        return new Student(student.getFirstName(), student.getLastName(), student.getEmail(), student.getDni(), student.getPassword(), student.getPhoneNumber());
+        return new Student(student.getFirstName(), student.getLastName(), student.getEmail(), student.getDni(), student.getPassword(), student.getPhoneNumber(), student.getAuthorities());
     }
 
     @Override
