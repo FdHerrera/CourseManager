@@ -4,6 +4,7 @@ import com.institution.manager.dto.request.NewUserDto;
 import com.institution.manager.entity.Professor;
 import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
+import com.institution.manager.exception.UserIsNotAProfessorException;
 import com.institution.manager.exception.UserNotFoundException;
 
 public interface IUserService {
@@ -13,5 +14,7 @@ public interface IUserService {
     Student createStudent(NewUserDto email);
 
     User findUser(String email) throws UserNotFoundException;
+
+    boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException;
 
 }

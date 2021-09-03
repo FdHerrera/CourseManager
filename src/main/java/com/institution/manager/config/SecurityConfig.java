@@ -13,6 +13,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST , "/auth/register", "/courses/create_course").permitAll().and().authorizeRequests()
+                .antMatchers(HttpMethod.PUT , "/courses/set_professor").permitAll().and().authorizeRequests()
                 .anyRequest().authenticated().and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

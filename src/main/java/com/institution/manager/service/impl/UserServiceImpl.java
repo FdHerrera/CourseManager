@@ -5,6 +5,7 @@ import com.institution.manager.entity.Professor;
 import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
+import com.institution.manager.exception.UserIsNotAProfessorException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
@@ -12,7 +13,6 @@ import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +67,18 @@ public class UserServiceImpl implements IUserService {
             return professorFound.get();
         else
             throw new UserNotFoundException(messageSource.getMessage("error.user.not.found", null, Locale.getDefault()));
+    }
+
+    @Override
+    public boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException {
+        boolean isProfessor = user.getAuthorities().stream().anyMatch(
+                grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(ERole.ROLE_PROFESSOR.name())
+        );
+        if (isProfessor)
+            return true;
+        else {
+            throw new UserIsNotAProfessorException(messageSource.getMessage("error.user.is.not.professor", null, Locale.getDefault()));
+        }
     }
 
 }
