@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/courses")
@@ -27,8 +26,8 @@ public class CourseController {
     }
 
     @PutMapping(path = "/set_professor")
-    public ResponseEntity<String> setProfessorToCourse(@RequestParam("courseId") Long courseId,@RequestParam("professorEmail")  String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
-        String courseWithProfessor = courseService.setProfessor(courseId, professorEmail);
+    public ResponseEntity<CourseResponseDto> setProfessorToCourse(@RequestParam("courseId") Long courseId,@RequestParam("professorEmail")  String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
+        CourseResponseDto courseWithProfessor = courseService.setProfessor(courseId, professorEmail);
         return new ResponseEntity<>(courseWithProfessor, HttpStatus.OK);
     }
 

@@ -11,6 +11,6 @@ public interface ICourseService {
 
     CourseResponseDto createCourse(NewCourseDto newCourseDto);
 
-    String setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException;
+    CourseResponseDto setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException;
 
 }

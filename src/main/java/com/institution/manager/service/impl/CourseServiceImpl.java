@@ -11,6 +11,7 @@ import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.repo.CourseRepo;
 import com.institution.manager.service.interf.ICourseService;
 import com.institution.manager.service.interf.IUserService;
+import com.institution.manager.util.CourseProjector;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -26,19 +27,18 @@ public class CourseServiceImpl implements ICourseService {
 
     private final CourseRepo repo;
     private final IUserService userService;
-    @Autowired
-    private final ProjectionFactory projectionFactory;
+    private final CourseProjector courseProjector;
     @Autowired
     private final MessageSource messageSource;
 
     public CourseResponseDto createCourse(NewCourseDto newCourseDto){
         Course newCourse = new Course(newCourseDto.getCourseName());
         repo.save(newCourse);
-        return projectionFactory.createProjection(CourseResponseDto.class, newCourse);
+        return courseProjector.createProjection(newCourse);
     }
 
     @Override
-    public String setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
+    public CourseResponseDto setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
         Course courseFound = repo.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException(
                         messageSource.getMessage("error.course.not.found", null, Locale.getDefault()))
@@ -47,7 +47,7 @@ public class CourseServiceImpl implements ICourseService {
         userService.checkIfIsProfessor(userFound);
         courseFound.setProfessor((Professor) userFound);
         Course courseWithProfessor = repo.save(courseFound);
-        return courseWithProfessor.toString();
+        return courseProjector.createProjection(courseWithProfessor);
     }
 
 }

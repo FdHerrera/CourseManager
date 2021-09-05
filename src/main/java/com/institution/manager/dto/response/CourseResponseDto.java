@@ -1,11 +1,19 @@
 package com.institution.manager.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public interface CourseResponseDto {
+import java.util.List;
 
-    Long getId();
-    String getCourseName();
+@Data
+public class CourseResponseDto {
 
+    private Long id;
+    private List<StudentResponseDto> students;
+    private ProfessorResponseDto professor;
+
+    public CourseResponseDto(Long id, List<StudentResponseDto> students, ProfessorResponseDto professor) {
+        this.id = id;
+        this.students = students;
+        this.professor = professor;
+    }
 }
