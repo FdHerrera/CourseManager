@@ -86,4 +86,11 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public boolean checkIfExists(String email) throws UserNotFoundException {
+        Optional<Student> studentFound = studentRepo.findByEmail(email);
+        Optional<Professor> professorFound = professorRepo.findByEmail(email);
+        return studentFound.isPresent() || professorFound.isPresent();
+    }
+
 }

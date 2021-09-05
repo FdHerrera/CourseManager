@@ -17,4 +17,5 @@ public interface IUserService {
 
     boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException;
 
+    boolean checkIfExists(String email) throws UserNotFoundException;
 }
