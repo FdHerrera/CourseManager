@@ -4,6 +4,7 @@ import com.institution.manager.dto.request.NewCourseDto;
 import com.institution.manager.dto.response.CourseResponseDto;
 import com.institution.manager.exception.CourseNotFoundException;
 import com.institution.manager.exception.UserIsNotAProfessorException;
+import com.institution.manager.exception.UserIsNotAStudentException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.service.interf.ICourseService;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,12 @@ public class CourseController {
     public ResponseEntity<CourseResponseDto> setProfessorToCourse(@RequestParam("courseId") Long courseId,@RequestParam("professorEmail")  String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException {
         CourseResponseDto courseWithProfessor = courseService.setProfessor(courseId, professorEmail);
         return new ResponseEntity<>(courseWithProfessor, HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/subscribe_to_course")
+    public ResponseEntity<CourseResponseDto> subscribeToCourse (@RequestParam("courseId") Long courseId, @RequestParam("studentEmail") String studentEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAStudentException {
+        CourseResponseDto courseWithNewStudent = courseService.addStudent(courseId, studentEmail);
+        return new ResponseEntity<>(courseWithNewStudent, HttpStatus.OK);
     }
 
 }

@@ -5,6 +5,7 @@ import com.institution.manager.entity.Professor;
 import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
 import com.institution.manager.exception.UserIsNotAProfessorException;
+import com.institution.manager.exception.UserIsNotAStudentException;
 import com.institution.manager.exception.UserNotFoundException;
 
 public interface IUserService {
@@ -15,7 +16,9 @@ public interface IUserService {
 
     User findUser(String email) throws UserNotFoundException;
 
-    boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException;
+    void checkIfIsProfessor(User user) throws UserIsNotAProfessorException;
 
     boolean checkIfExists(String email) throws UserNotFoundException;
+
+    void checkIfIsStudent(User user) throws UserIsNotAStudentException;
 }

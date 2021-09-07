@@ -6,6 +6,7 @@ import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
 import com.institution.manager.exception.UserIsNotAProfessorException;
+import com.institution.manager.exception.UserIsNotAStudentException;
 import com.institution.manager.exception.UserNotFoundException;
 import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
@@ -75,17 +76,22 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean checkIfIsProfessor(User user) throws UserIsNotAProfessorException {
+    public void checkIfIsProfessor(User user) throws UserIsNotAProfessorException {
         boolean isProfessor = user.getAuthorities().stream().anyMatch(
                 grantedAuthority -> grantedAuthority.getAuthority().equals(ERole.ROLE_PROFESSOR.name())
         );
-        if (isProfessor)
-            return true;
-        else {
+        if (!isProfessor)
             throw new UserIsNotAProfessorException(messageSource.getMessage("error.user.is.not.professor", null, Locale.getDefault()));
-        }
     }
 
+    @Override
+    public void checkIfIsStudent(User user) throws UserIsNotAStudentException {
+        boolean isStudent = user.getAuthorities().stream().anyMatch(
+                grantedAuthority -> grantedAuthority.getAuthority().equals(ERole.ROLE_STUDENT.name())
+        );
+        if (!isStudent)
+            throw new UserIsNotAStudentException(messageSource.getMessage("error.user.is.not.student", null, Locale.getDefault()));
+    }
     @Override
     public boolean checkIfExists(String email) throws UserNotFoundException {
         Optional<Student> studentFound = studentRepo.findByEmail(email);
