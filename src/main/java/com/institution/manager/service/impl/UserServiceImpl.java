@@ -5,9 +5,9 @@ import com.institution.manager.entity.Professor;
 import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
 import com.institution.manager.enumerate.ERole;
-import com.institution.manager.exception.UserIsNotAProfessorException;
-import com.institution.manager.exception.UserIsNotAStudentException;
-import com.institution.manager.exception.UserNotFoundException;
+import com.institution.manager.exception.user.UserIsNotAProfessorException;
+import com.institution.manager.exception.user.UserIsNotAStudentException;
+import com.institution.manager.exception.user.UserNotFoundException;
 import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
 import com.institution.manager.service.interf.IUserService;
@@ -76,6 +76,18 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User findUser(Long id) throws UserNotFoundException {
+        Optional<Student> studentFound = studentRepo.findById(id);
+        Optional<Professor> professorFound = professorRepo.findById(id);
+        if(studentFound.isPresent())
+            return studentFound.get();
+        else if(professorFound.isPresent())
+            return professorFound.get();
+        else
+            throw new UserNotFoundException(messageSource.getMessage("error.user.not.found", null, Locale.getDefault()));
+    }
+
+    @Override
     public void checkIfIsProfessor(User user) throws UserIsNotAProfessorException {
         boolean isProfessor = user.getAuthorities().stream().anyMatch(
                 grantedAuthority -> grantedAuthority.getAuthority().equals(ERole.ROLE_PROFESSOR.name())
@@ -92,6 +104,17 @@ public class UserServiceImpl implements IUserService {
         if (!isStudent)
             throw new UserIsNotAStudentException(messageSource.getMessage("error.user.is.not.student", null, Locale.getDefault()));
     }
+
+    @Override
+    public void enableProfessor(Long id) {
+        professorRepo.enableProfessor(id);
+    }
+
+    @Override
+    public void enableStudent(Long id) {
+        studentRepo.enableStudent(id);
+    }
+
     @Override
     public boolean checkIfExists(String email) throws UserNotFoundException {
         Optional<Student> studentFound = studentRepo.findByEmail(email);

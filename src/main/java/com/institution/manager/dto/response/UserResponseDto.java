@@ -15,5 +15,6 @@ public interface UserResponseDto {
     String getPhoneNumber();
     String getUsername();
     Collection<? extends GrantedAuthority> getAuthorities();
+    boolean getEnabled();
 
 }

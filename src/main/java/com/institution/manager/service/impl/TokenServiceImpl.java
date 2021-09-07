@@ -4,8 +4,10 @@ import com.institution.manager.entity.ConfirmationToken;
 import com.institution.manager.entity.Professor;
 import com.institution.manager.entity.Student;
 import com.institution.manager.entity.User;
-import com.institution.manager.exception.CanNotCreateTokenException;
-import com.institution.manager.exception.UserNotFoundException;
+import com.institution.manager.exception.token.CanNotCreateTokenException;
+import com.institution.manager.exception.token.TokenException;
+import com.institution.manager.exception.token.TokenNotFoundException;
+import com.institution.manager.exception.user.UserNotFoundException;
 import com.institution.manager.repo.ConfirmationTokenRepo;
 import com.institution.manager.service.interf.ITokenService;
 import com.institution.manager.service.interf.IUserService;
@@ -50,5 +52,18 @@ public class TokenServiceImpl implements ITokenService {
         else
             throw new CanNotCreateTokenException(messageSource.getMessage("error.cant.create.token", null, Locale.getDefault()));
         return token;
+    }
+
+    @Override
+    public ConfirmationToken getToken(String token) throws TokenNotFoundException {
+        return repo.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException(messageSource.getMessage("error.token.not.found", null, Locale.getDefault())));
+    }
+
+    @Override
+    public void confirmToken(String token) throws TokenException {
+        ConfirmationToken confirmationToken = getToken(token);
+        confirmationToken.setConfirmedAt(new Date());
+        repo.save(confirmationToken);
     }
 }

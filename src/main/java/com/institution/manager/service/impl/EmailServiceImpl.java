@@ -1,8 +1,8 @@
 package com.institution.manager.service.impl;
 
-import com.institution.manager.exception.CanNotCreateTokenException;
-import com.institution.manager.exception.CanNotSendEmailException;
-import com.institution.manager.exception.UserNotFoundException;
+import com.institution.manager.exception.token.CanNotCreateTokenException;
+import com.institution.manager.exception.email.CanNotSendEmailException;
+import com.institution.manager.exception.user.UserNotFoundException;
 import com.institution.manager.service.interf.IEmailService;
 import com.institution.manager.service.interf.ITokenService;
 import com.institution.manager.util.EmailConstants;
