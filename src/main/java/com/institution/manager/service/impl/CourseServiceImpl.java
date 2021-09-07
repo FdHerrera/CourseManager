@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +32,17 @@ public class CourseServiceImpl implements ICourseService {
     private final CourseProjector courseProjector;
     @Autowired
     private final MessageSource messageSource;
+
+    @Override
+    public List<CourseResponseDto> getCourses(){
+        List<Course> courses = repo.findAll();
+        List<CourseResponseDto> courseResponseDtoS = new ArrayList<>();
+        for (Course course : courses){
+            CourseResponseDto projectedCourse = courseProjector.createProjection(course);
+            courseResponseDtoS.add(projectedCourse);
+        }
+        return courseResponseDtoS;
+    }
 
     public CourseResponseDto createCourse(NewCourseDto newCourseDto) {
         Course newCourse = new Course(newCourseDto.getCourseName());

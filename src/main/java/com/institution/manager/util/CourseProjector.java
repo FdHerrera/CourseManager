@@ -34,7 +34,7 @@ public class CourseProjector {
             professor = projectionFactory.createProjection(ProfessorResponseDto.class, course.getProfessor());
         }
         return new CourseResponseDto(
-                course.getId(), studentsList, professor
+                course.getId(), studentsList, professor, course.getCourseName()
         );
     }
 

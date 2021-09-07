@@ -7,6 +7,8 @@ import com.institution.manager.exception.user.UserIsNotAProfessorException;
 import com.institution.manager.exception.user.UserIsNotAStudentException;
 import com.institution.manager.exception.user.UserNotFoundException;
 
+import java.util.List;
+
 
 public interface ICourseService {
 
@@ -15,5 +17,7 @@ public interface ICourseService {
     CourseResponseDto setProfessor(Long courseId, String professorEmail) throws CourseNotFoundException, UserNotFoundException, UserIsNotAProfessorException;
 
     CourseResponseDto addStudent(Long courseId, String email) throws CourseNotFoundException, UserNotFoundException, UserIsNotAStudentException;
+
+    List<CourseResponseDto> getCourses();
 
 }

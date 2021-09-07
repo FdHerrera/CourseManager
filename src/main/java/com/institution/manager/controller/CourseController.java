@@ -24,7 +24,8 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<List<CourseResponseDto>> getCourses(){
-        return null;
+        List<CourseResponseDto> courses = courseService.getCourses();
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @PostMapping(path = "/create_course")
