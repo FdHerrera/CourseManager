@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/courses")
@@ -19,6 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
 
     private final ICourseService courseService;
+
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDto>> getCourses(){
+        return null;
+    }
 
     @PostMapping(path = "/create_course")
     public ResponseEntity<CourseResponseDto> createCourse(@RequestBody NewCourseDto newCourse){
