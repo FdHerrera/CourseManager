@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "/courses")
+@RequestMapping(path = "/course")
 @AllArgsConstructor
 public class CourseController {
 

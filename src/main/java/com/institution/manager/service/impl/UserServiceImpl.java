@@ -12,9 +12,13 @@ import com.institution.manager.repo.ProfessorRepo;
 import com.institution.manager.repo.StudentRepo;
 import com.institution.manager.service.interf.IUserService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +26,7 @@ import java.util.*;
 
 @AllArgsConstructor
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements IUserService, UserDetailsService {
 
     private final StudentRepo studentRepo;
     private final ProfessorRepo professorRepo;
@@ -120,6 +124,12 @@ public class UserServiceImpl implements IUserService {
         Optional<Student> studentFound = studentRepo.findByEmail(email);
         Optional<Professor> professorFound = professorRepo.findByEmail(email);
         return studentFound.isPresent() || professorFound.isPresent();
+    }
+
+    @SneakyThrows
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return findUser(s);
     }
 
 }

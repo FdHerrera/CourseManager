@@ -44,6 +44,7 @@ public class CourseServiceImpl implements ICourseService {
         return courseResponseDtoS;
     }
 
+    @Override
     public CourseResponseDto createCourse(NewCourseDto newCourseDto) {
         Course newCourse = new Course(newCourseDto.getCourseName());
         repo.save(newCourse);
